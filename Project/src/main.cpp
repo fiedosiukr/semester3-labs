@@ -1,10 +1,9 @@
-#include <allegro5/allegro.h>
-#include <iostream>
+#include "../include/game.h"
 
 
 int main() {
-    al_init();
+    Game game;
+    game.start();
 
-    std::cout << "CMake test.\n";
     return 0;
 }
