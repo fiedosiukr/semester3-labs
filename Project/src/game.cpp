@@ -1,5 +1,7 @@
 #include "../include/game.h"
 
+#include "../include/play_state.h"
+
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
@@ -47,11 +49,18 @@ Game::Game()
 	al_register_event_source(m_eventQueue, al_get_display_event_source(m_display));
 	al_register_event_source(m_eventQueue, al_get_timer_event_source(m_timer));
 	al_register_event_source(m_eventQueue, al_get_mouse_event_source());
+
+    m_stateManager = new StateManager();
+    m_stateManager->set_state(StateType::MENU);
 }
 
 Game::~Game()
 {
+	al_destroy_timer(m_timer);
+	al_destroy_display(m_display);
+	al_destroy_event_queue(m_eventQueue);
 
+    delete m_stateManager;
 }
 
 void Game::start() 
@@ -77,7 +86,7 @@ void Game::run()
 
 void Game::update()
 {
-
+    m_stateManager->update();
 }
 
 void Game::render()

@@ -1,7 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "states.h"
+
 #include <allegro5/allegro.h>
+
+
 
 class Game 
 {
@@ -12,6 +16,8 @@ class Game
         void start();
 
     private:
+        StateManager *m_stateManager;
+
         ALLEGRO_DISPLAY *m_display;
         ALLEGRO_TIMER *m_timer;
         ALLEGRO_EVENT_QUEUE *m_eventQueue;
