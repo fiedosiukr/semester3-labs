@@ -28,6 +28,7 @@ void MenuState::deinit()
     delete m_playButton;
     delete m_scoresButton;
     delete m_quitButton;
+    al_destroy_font(m_font);
 }
 
 void MenuState::update()

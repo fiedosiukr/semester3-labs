@@ -8,8 +8,6 @@
 
 Game::Game()
 {
-    
-
 	m_timer = al_create_timer(1.0 / TPS);
 	if (!m_timer) {
 		std::cout << "Failed to create timer!\n";
@@ -35,10 +33,11 @@ Game::Game()
 
 Game::~Game()
 {
+	delete m_stateManager;
+	
 	al_destroy_timer(m_timer);
 	al_destroy_display(m_display);
 	al_destroy_event_queue(m_eventQueue);
-	delete m_stateManager;
 }
 
 void Game::start() 
@@ -51,6 +50,7 @@ void Game::start()
 void Game::stop()
 {
 	running = false;
+	al_stop_timer(m_timer);
 }
 
 void Game::run()
@@ -85,7 +85,7 @@ void Game::check_events(ALLEGRO_EVENT t_event) {
 		updated = true;
 	}
 	else if (t_event.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-		running = false;
+		stop();
     }
 	else {
 		m_stateManager->check_events(t_event);

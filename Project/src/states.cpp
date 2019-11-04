@@ -10,6 +10,14 @@ StateManager::StateManager(Game *t_game) : m_game(t_game)
     m_states[StateType::PLAY] = new PlayState(this);
 }
 
+StateManager::~StateManager()
+{
+    m_states[m_activeState]->deinit();
+
+    delete m_states[StateType::MENU];
+    delete m_states[StateType::PLAY];
+}
+
 void StateManager::add_state(StateType t_stateType, State *t_state)
 {
     m_states[t_stateType] = t_state;
@@ -63,6 +71,5 @@ void State::change_state(StateType t_stateType)
 
 void State::quit_game()
 {
-    m_stateManager->get_active_state().deinit();
     m_stateManager->get_game().stop();
 }

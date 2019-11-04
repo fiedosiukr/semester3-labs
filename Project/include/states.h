@@ -23,6 +23,7 @@ class StateManager
 {
     public:
         StateManager(Game*);
+        ~StateManager();
         void add_state(StateType, State*);
         void set_state(StateType);
         void update();

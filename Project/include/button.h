@@ -2,15 +2,19 @@
 #define BUTTON_H
 
 #include "constants.h"
+#include "animation.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
+
+#include <vector>
 
 
 class Button
 {
     public:
         Button(const char*, ALLEGRO_FONT*, int, int, int, int);
+        ~Button();
         void render();
         void update(int, int);
         bool is_hovered();
@@ -26,6 +30,8 @@ class Button
         int m_maxTime{0};
 
         bool m_hovered{false};
+
+        std::vector<Animation*> m_animations;
         
         ALLEGRO_COLOR m_color{al_map_rgb(BUTTON_COLOR.r,
                                     BUTTON_COLOR.g, BUTTON_COLOR.b)};
