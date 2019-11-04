@@ -4,7 +4,7 @@
 #include "../include/play_state.h"
 
 
-StateManager::StateManager()
+StateManager::StateManager(Game *t_game) : m_game(t_game)
 {
     m_states[StateType::MENU] = new MenuState(this);
     m_states[StateType::PLAY] = new PlayState(this);
@@ -17,8 +17,8 @@ void StateManager::add_state(StateType t_stateType, State *t_state)
 
 void StateManager::set_state(StateType t_stateType)
 {
-    if (m_states[t_stateType]) {
-        m_states[t_stateType]->deinit();
+    if (m_states[m_activeState]) {
+        m_states[m_activeState]->deinit();
     }
 
     m_activeState = t_stateType;
@@ -46,7 +46,23 @@ void StateManager::check_events(ALLEGRO_EVENT t_event) {
     }
 }
 
+State &StateManager::get_active_state()
+{
+    return *m_states[m_activeState];
+}
+
+Game &StateManager::get_game()
+{
+    return *m_game;
+}
+
 void State::change_state(StateType t_stateType)
 {
     m_stateManager->set_state(t_stateType);
+}
+
+void State::quit_game()
+{
+    m_stateManager->get_active_state().deinit();
+    m_stateManager->get_game().stop();
 }

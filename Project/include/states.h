@@ -1,6 +1,8 @@
 #ifndef STATES_H
 #define STATES_H
 
+#include "../include/game.h"
+
 #include <allegro5/allegro.h>
 
 #include <map>
@@ -14,21 +16,25 @@ enum StateType
 
 
 class State;
+class Game;
 
 
 class StateManager
 {
     public:
-        StateManager();
+        StateManager(Game*);
         void add_state(StateType, State*);
         void set_state(StateType);
         void update();
         void render();
         void check_events(ALLEGRO_EVENT);
+        State &get_active_state();
+        Game &get_game();
 
     private:
         std::map<StateType, State*> m_states;
         StateType m_activeState;
+        Game *m_game;
 };
 
 
@@ -45,6 +51,7 @@ class State
         State(StateManager *t_stateManager) : m_stateManager(t_stateManager) {}
 
         void change_state(StateType);
+        void quit_game();
 
         StateManager *m_stateManager;
 };

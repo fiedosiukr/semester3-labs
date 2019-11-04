@@ -6,14 +6,17 @@
 #include <allegro5/allegro.h>
 
 
+class StateManager;
 
 class Game 
 {
     public:
+        
         Game();
         ~Game();
 
         void start();
+        void stop();
 
     private:
         StateManager *m_stateManager;
