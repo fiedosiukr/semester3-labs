@@ -12,7 +12,8 @@
 class MenuState : public State 
 {
     public:
-        MenuState(StateManager *t_stateManager) : State(t_stateManager) {}
+        MenuState(StateManager*);
+        ~MenuState();
 
         void init();
         void deinit();

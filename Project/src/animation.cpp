@@ -29,4 +29,3 @@ float Animation::get_value()
 {
     return m_time / (m_duration * TPS) * (m_maximumValue - m_initialValue) + m_initialValue;
 }
-

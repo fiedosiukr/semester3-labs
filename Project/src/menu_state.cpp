@@ -4,13 +4,12 @@
 #include "../include/constants.h"
 
 
-void MenuState::init()
+MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
 {
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
     al_replace_path_component(path, -1, "resources");
     al_change_directory(al_path_cstr(path, '/'));
     m_font = al_load_font("arial.ttf", FONT_SIZE, 0);
-    al_destroy_path(path);
 
     m_playButton = new Button("Play!", m_font, WIDTH / 2 - BUTTON_WIDTH / 2,
              HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2,
@@ -23,12 +22,22 @@ void MenuState::init()
              + (BUTTON_OFFSET + BUTTON_HEIGHT) * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
 }
 
-void MenuState::deinit()
+MenuState::~MenuState()
 {
     delete m_playButton;
     delete m_scoresButton;
     delete m_quitButton;
     al_destroy_font(m_font);
+}
+
+void MenuState::init()
+{
+    
+}
+
+void MenuState::deinit()
+{
+
 }
 
 void MenuState::update()

@@ -1,6 +1,5 @@
 #include "../include/button.h"
 
-
 #include <allegro5/allegro_primitives.h>
 
 
@@ -24,9 +23,8 @@ void Button::render()
 
 Button::~Button()
 {
-    int size = m_animations.size() - 1;
-    for (int i = size; i >= 0; i--) {
-        delete m_animations[i];
+    for (auto animation : m_animations) {
+        delete animation;
     }
 }
 
@@ -36,38 +34,21 @@ void Button::update(int t_mouseX, int t_mouseY)
                 t_mouseY >= m_y && t_mouseY < m_y + m_height);
 
     if (m_hovered) {
-        for (auto animation : m_animations) {
-            animation->start();
-        }
+        for (int i = 0; i < 3; i++)
+            m_animations[i]->start();
     }
     else {
-        for (auto animation : m_animations) {
-            animation->stop();
-        }
+        for (int i = 0; i < 3; i++)
+            m_animations[i]->stop();
     }
 
-    for (auto animation : m_animations) {
-        animation->update();
-    }
+    for (int i = 0; i < 3; i++)
+        m_animations[i]->update();
 
     m_color = al_map_rgb((int) m_animations[0]->get_value(), (int) m_animations[1]->get_value(), (int) m_animations[2]->get_value());
-    /*
-    m_hovered ? m_maxTime = HOVER_DURATION * TPS : m_maxTime = 0;
-
-    if (m_time != m_maxTime) {
-        m_time < m_maxTime ? ++m_time : --m_time;
-    }
-
-    double scalar = (double)(m_time / (double)(HOVER_DURATION * TPS));
-
-
-    m_color = al_map_rgb((int)(BUTTON_COLOR.r + (BUTTON_HOVER_COLOR.r - BUTTON_COLOR.r) * scalar),
-                    (int)(BUTTON_COLOR.g + (BUTTON_HOVER_COLOR.g - BUTTON_COLOR.g) * scalar),
-                    (int) (BUTTON_COLOR.b + (BUTTON_HOVER_COLOR.b - BUTTON_COLOR.b) * scalar));*/
-
 }
 
-bool Button::is_hovered() {
-    
+bool Button::is_hovered()
+{
     return m_hovered;
 }

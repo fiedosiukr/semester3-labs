@@ -10,7 +10,7 @@
 
 #define TPS 60
 
-#define HOVER_DURATION 0.3
+#define HOVER_DURATION 0.2
 
 #define FONT_SIZE 28
 

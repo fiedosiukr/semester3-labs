@@ -35,7 +35,7 @@ class Button
         
         ALLEGRO_COLOR m_color{al_map_rgb(BUTTON_COLOR.r,
                                     BUTTON_COLOR.g, BUTTON_COLOR.b)};
-        ALLEGRO_FONT *m_font;
+        ALLEGRO_FONT *m_font{nullptr};
 };
 
 #endif
