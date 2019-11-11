@@ -10,9 +10,9 @@ Button::Button(const char *t_text, ALLEGRO_FONT *t_font,
 {
     m_text = const_cast<char*>(t_text);
 
-    m_animations.emplace_back(new Animation(BUTTON_COLOR.r, BUTTON_HOVER_COLOR.r, HOVER_DURATION));
-    m_animations.emplace_back(new Animation(BUTTON_COLOR.g, BUTTON_HOVER_COLOR.g, HOVER_DURATION));
-    m_animations.emplace_back(new Animation(BUTTON_COLOR.b, BUTTON_HOVER_COLOR.b, HOVER_DURATION));
+    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.r, BUTTON_HOVER_COLOR.r));
+    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.g, BUTTON_HOVER_COLOR.g));
+    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.b, BUTTON_HOVER_COLOR.b));
 }
 
 void Button::render()
