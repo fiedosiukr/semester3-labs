@@ -26,7 +26,7 @@ void Timer::update()
 
 bool Timer::is_finished()
 {
-    if (m_time != 0) {
+    if (m_maxTime != 0) {
         return m_maxTime == m_time;
     }
 
@@ -42,4 +42,9 @@ void Timer::reset()
 void Timer::reset_time()
 {
     m_time = 0;
+}
+
+int Timer::get_time()
+{
+    return m_time;
 }

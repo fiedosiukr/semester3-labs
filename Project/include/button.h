@@ -14,10 +14,10 @@ class Button
 {
     public:
         Button(const char*, ALLEGRO_FONT*, int, int, int, int);
-        ~Button();
         void render();
         void update(int, int);
         bool is_hovered();
+        void set_disabled(bool);
 
     private:
         char *m_text;
@@ -30,9 +30,10 @@ class Button
         int m_maxTime{0};
 
         bool m_hovered{false};
+        bool m_disabled{false};
 
-        std::vector<Animation*> m_animations;
-        
+        ColorAnimation *m_colorAnimation;
+
         ALLEGRO_COLOR m_color{al_map_rgb(BUTTON_COLOR.r,
                                     BUTTON_COLOR.g, BUTTON_COLOR.b)};
         ALLEGRO_FONT *m_font{nullptr};

@@ -9,7 +9,8 @@ MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
     al_replace_path_component(path, -1, "resources");
     al_change_directory(al_path_cstr(path, '/'));
-    m_font = al_load_font("arial.ttf", FONT_SIZE, 0);
+    m_font = al_load_font("arial.ttf", MENU_FONT_SIZE, 0);
+    al_destroy_path(path);
 
     m_playButton = new Button("Play!", m_font, WIDTH / 2 - BUTTON_WIDTH / 2,
              HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2,
@@ -49,7 +50,7 @@ void MenuState::update()
 
 void MenuState::render()
 {
-    al_clear_to_color(al_map_rgb(28, 25, 25));
+    al_clear_to_color(al_map_rgb(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b));
     m_playButton->render();
     m_scoresButton->render();
     m_quitButton->render();
@@ -60,7 +61,8 @@ void MenuState::check_events(ALLEGRO_EVENT t_event)
     if (t_event.type == ALLEGRO_EVENT_MOUSE_AXES) {
         m_mouseX = t_event.mouse.x;
         m_mouseY = t_event.mouse.y;
-    } else if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
+    } 
+    else if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
                 t_event.mouse.button == 1) {
         if (m_playButton->is_hovered()) {
             change_state(StateType::PLAY);

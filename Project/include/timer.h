@@ -11,6 +11,7 @@ class Timer
         virtual bool is_finished();
         virtual void reset();
         virtual void reset_time();
+        int get_time();
     
     protected:
         int m_time{0};

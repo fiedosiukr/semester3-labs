@@ -29,6 +29,7 @@ Game::Game()
 
 	m_stateManager = new StateManager(this);
     m_stateManager->set_state(StateType::MENU);
+
 }
 
 Game::~Game()

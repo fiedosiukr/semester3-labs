@@ -10,45 +10,47 @@ Button::Button(const char *t_text, ALLEGRO_FONT *t_font,
 {
     m_text = const_cast<char*>(t_text);
 
-    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.r, BUTTON_HOVER_COLOR.r));
-    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.g, BUTTON_HOVER_COLOR.g));
-    m_animations.emplace_back(new Animation(HOVER_DURATION, BUTTON_COLOR.b, BUTTON_HOVER_COLOR.b));
+    m_colorAnimation = new ColorAnimation(HOVER_DURATION, BUTTON_COLOR, BUTTON_HOVER_COLOR);
 }
 
 void Button::render()
 {
     al_draw_filled_rectangle(m_x, m_y, m_x + m_width, m_y + m_height, m_color);
-    al_draw_text(m_font, TEXT_COLOR, m_x + m_width / 2, m_y + (m_height - FONT_SIZE) / 2, ALLEGRO_ALIGN_CENTRE, m_text);
-}
-
-Button::~Button()
-{
-    for (auto animation : m_animations) {
-        delete animation;
-    }
+    al_draw_text(m_font, TEXT_COLOR, m_x + m_width / 2, m_y + (m_height - al_get_font_ascent(m_font)) / 2, ALLEGRO_ALIGN_CENTRE, m_text);
 }
 
 void Button::update(int t_mouseX, int t_mouseY)
 {
-    m_hovered = (t_mouseX >= m_x && t_mouseX < m_x + m_width &&
+    if (!m_disabled) {
+        m_hovered = (t_mouseX >= m_x && t_mouseX < m_x + m_width &&
                 t_mouseY >= m_y && t_mouseY < m_y + m_height);
+    }
 
     if (m_hovered) {
-        for (int i = 0; i < 3; i++)
-            m_animations[i]->start();
+        m_colorAnimation->start();
     }
     else {
-        for (int i = 0; i < 3; i++)
-            m_animations[i]->stop();
+        m_colorAnimation->stop();
     }
 
-    for (int i = 0; i < 3; i++)
-        m_animations[i]->update();
+    m_colorAnimation->update();
 
-    m_color = al_map_rgb((int) m_animations[0]->get_value(), (int) m_animations[1]->get_value(), (int) m_animations[2]->get_value());
-}
-
+    m_color = m_colorAnimation->get_color();
+}  
+              
 bool Button::is_hovered()
 {
     return m_hovered;
+}
+
+void Button::set_disabled(bool t_disabled)
+{
+    m_disabled = t_disabled;
+
+    if (m_disabled) {
+        m_hovered = false;
+        m_colorAnimation->set_initial_color(BUTTON_DISABLED_COLOR);
+    } else {
+        m_colorAnimation->set_initial_color(BUTTON_COLOR);
+    }
 }

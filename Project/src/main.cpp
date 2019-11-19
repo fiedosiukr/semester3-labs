@@ -1,5 +1,7 @@
 #include "../include/game.h"
 
+#include "../include/constants.h"
+
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
@@ -8,6 +10,7 @@
 
 
 int main() {
+    
     if (!al_init()) {
       std::cout << "Failed to initialize allegro!\n";
     }
