@@ -1,0 +1,3 @@
+/home/ubuntu/repos/a7a9acdb-gr22-repo/Thematic_tasks/labs06/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/repos/a7a9acdb-gr22-repo/Thematic_tasks/labs06/build/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/repos/a7a9acdb-gr22-repo/Thematic_tasks/labs06/build/CMakeFiles/labs06.dir
