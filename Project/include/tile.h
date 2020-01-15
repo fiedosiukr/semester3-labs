@@ -3,6 +3,8 @@
 
 #include "animation.h"
 
+#include "constants.h"
+
 #include <allegro5/allegro.h>
 
 class Tile
@@ -10,7 +12,7 @@ class Tile
     public:
         Tile();
         ~Tile();
-        void blink(ALLEGRO_COLOR);
+        void blink(Color);
         void render();
         void update(int, int);
         void set_location(int, int, bool);
@@ -28,12 +30,13 @@ class Tile
         int m_targetY{0};
         int m_targetWidth{0};
         int m_targetHeight{0};
+        Point m_currentSize;
         bool m_hovered;
+        
+        Color m_color;
 
-        ALLEGRO_COLOR m_color;
-
-        FadeoutColorAnimation *m_colorAnimation;
-        Animation *m_animation;
+        FadeoutAnimation<Color> *m_colorAnimation;
+        Animation<Point> *m_animation;
 };
 
 #endif

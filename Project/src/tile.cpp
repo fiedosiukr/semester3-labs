@@ -9,8 +9,8 @@
 
 Tile::Tile()
 {
-    m_colorAnimation = new FadeoutColorAnimation(0.2, BUTTON_COLOR, BUTTON_HOVER_COLOR, 0.5);
-    m_animation = new Animation(0.5);
+    m_colorAnimation = new FadeoutAnimation<Color>(0.2, &m_color, BUTTON_COLOR, BUTTON_HOVER_COLOR, 0.5);
+    m_animation = new Animation<Point>(0.5, &m_currentSize, {m_width, m_height}, {0, 0});
 }
 
 Tile::~Tile()
@@ -19,18 +19,16 @@ Tile::~Tile()
     delete m_animation;
 }
 
-void Tile::blink(ALLEGRO_COLOR t_color)
+void Tile::blink(Color t_color)
 {
-    m_colorAnimation->set_target_color(t_color);
+    m_colorAnimation->set_target_value(t_color);
     m_colorAnimation->start();
 }
 
 void Tile::render()
 {
-    al_draw_filled_rectangle(m_x - (1 - m_animation->get_coefficient()) * m_width / 2,
-                            m_y - (1 - m_animation->get_coefficient()) * m_height / 2,
-                            m_x + (1 - m_animation->get_coefficient()) * m_width / 2, 
-                            m_y + (1 - m_animation->get_coefficient()) * m_height / 2, m_color);
+    al_draw_filled_rectangle(m_x - m_currentSize.x / 2, m_y - m_currentSize.y / 2,
+                            m_x + m_currentSize.x / 2, m_y + m_currentSize.y / 2, m_color.to_al_color());
 }
 
 void Tile::update(int t_mouseX, int t_mouseY)
@@ -48,8 +46,6 @@ void Tile::update(int t_mouseX, int t_mouseY)
         m_y = m_targetY;
         m_animation->stop();
     }
-
-    m_color = m_colorAnimation->get_color();
 }
 
 void Tile::set_location(int t_x, int t_y, bool m_animate)
@@ -70,6 +66,8 @@ void Tile::set_size(int t_width, int t_height, bool m_animate)
     if (m_animate) {
         m_targetWidth = t_width;
         m_targetHeight = t_height;
+        m_animation->set_initial_value({m_width, m_height});
+        m_animation->set_target_value({m_targetWidth, m_targetHeight});
         m_animation->start();
     }
     else {
@@ -90,5 +88,5 @@ bool Tile::is_blinking()
 
 bool Tile::is_changing_size()
 {
-    return m_animation->get_coefficient() != 0;
+    return (m_targetWidth == m_width && m_targetHeight == m_height);
 }

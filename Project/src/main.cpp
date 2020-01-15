@@ -1,5 +1,4 @@
 #include "../include/game.h"
-
 #include "../include/constants.h"
 
 #include <allegro5/allegro_primitives.h>

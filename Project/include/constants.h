@@ -41,28 +41,79 @@
 
 #define DIFFICULTY_INCREMENT_PER_LEVEL 2
 
-const ALLEGRO_COLOR BUTTON_COLOR = {140, 45, 0};
-const ALLEGRO_COLOR BUTTON_HOVER_COLOR = {241, 106, 0};
-const ALLEGRO_COLOR BUTTON_DISABLED_COLOR = {88, 37, 14};
-const ALLEGRO_COLOR TEXT_COLOR = {230, 230, 230};
-const ALLEGRO_COLOR CORRECT_COLOR = {34, 151, 34};
-const ALLEGRO_COLOR WRONG_COLOR = {200, 0, 30};
-const ALLEGRO_COLOR BACKGROUND_COLOR {25, 25, 25};
+struct Color
+{
+    unsigned int r;
+    unsigned int g;
+    unsigned int b;
 
-typedef struct point {
+    Color(int r, int g, int b) {
+        this->r = r;
+        this->g = g;
+        this->b = b;
+    }
+
+    struct Color operator=(struct Color& rhs)
+    {
+        r = rhs.r;
+        g = rhs.g;
+        b = rhs.b;
+    
+        return *this;
+    }
+
+    struct Color operator-(const struct Color& rhs)
+    {
+        return Color((int) r - rhs.r, (int) g - rhs.g, (int) b - rhs.b);
+    }
+
+    struct Color operator*(float rhs)
+    {
+        return Color((int) r * rhs, (int) g * rhs, (int) b * rhs);
+    }
+
+    ALLEGRO_COLOR to_al_color()
+    {
+        return al_map_rgb(r, g, b);
+    }
+    
+};
+
+struct Point
+{
     int x;
     int y;
 
-    bool operator==(const struct point& rhs)
+    bool operator==(const struct Point& rhs)
     {
         return (x == rhs.x && y == rhs.y);
     }
 
-    bool operator!=(const struct point& rhs)
+    bool operator!=(const struct Point& rhs)
     {
         return (x != rhs.x || y != rhs.y);
     }
 
-} Point;
+    void operator-(const struct Point& rhs)
+    {
+        x = x - rhs.x;
+        y = y - rhs.y;
+    }
+
+    void operator*(float rhs)
+    {
+        x = (int) (x * rhs);
+        y = (int) (y * rhs);
+    }
+
+};
+
+static Color BUTTON_COLOR = {140, 45, 0};
+static Color BUTTON_HOVER_COLOR = {241, 106, 0};
+static Color BUTTON_DISABLED_COLOR = {88, 37, 14};
+static Color TEXT_COLOR = {230, 230, 230};
+static Color CORRECT_COLOR = {34, 151, 34};
+static Color WRONG_COLOR = {200, 0, 30};
+static Color BACKGROUND_COLOR {25, 25, 25};
 
 #endif

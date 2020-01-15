@@ -5,90 +5,82 @@
 #include <iostream>
 
 
-Animation::Animation(float t_duration) :
-        Timer(t_duration)
+template<class T>
+Animation<T>::Animation(float t_duration, T* t_pointer, T t_initialValue, T t_targetValue) :
+        Timer(t_duration), m_pointer(t_pointer),
+        m_initialValue(t_initialValue), m_targetValue(t_targetValue)
 {
 }
 
-void Animation::update()
+template<class T>
+void Animation<T>::update()
 {
-
     if (m_time != m_maxTime) {
         m_time < m_maxTime ? m_time++ : m_time--;
     }
+
+    *m_pointer = ((m_targetValue - m_initialValue) * (m_time / (m_duration * TPS)));
 }
 
-float Animation::get_coefficient()
+template<class T>
+void Animation<T>::set_initial_value(T t_initialValue)
 {
-    return m_time / (m_duration * TPS);
+    m_initialValue= t_initialValue;
 }
 
-ColorAnimation::ColorAnimation(float t_duration, ALLEGRO_COLOR t_initialColor, ALLEGRO_COLOR t_targetColor) :
-                    Animation(t_duration), m_initialColor(t_initialColor), m_targetColor(t_targetColor)
+template<class T>
+void Animation<T>::set_target_value(T t_targetValue)
 {
+    m_targetValue = t_targetValue;
 }
 
-ColorAnimation::~ColorAnimation()
-{
-}
-
-ALLEGRO_COLOR ColorAnimation::get_color()
-{
-    return al_map_rgb((int)((m_targetColor.r - m_initialColor.r) * get_coefficient() + m_initialColor.r),
-                    (int)((m_targetColor.g - m_initialColor.g) * get_coefficient() + m_initialColor.g),
-                    (int)((m_targetColor.b - m_initialColor.b) * get_coefficient() + m_initialColor.b));
-}
-
-void ColorAnimation::set_target_color(ALLEGRO_COLOR t_targetColor)
-{
-    m_targetColor = t_targetColor;
-}
-
-void ColorAnimation::set_initial_color(ALLEGRO_COLOR t_initialColor)
-{
-    m_initialColor = t_initialColor;
-}
-
-FadeoutColorAnimation::FadeoutColorAnimation(float t_duration, ALLEGRO_COLOR t_initialColor,
-                    ALLEGRO_COLOR t_targetColor, float t_delayDuration) :
-                    ColorAnimation(t_duration, t_initialColor, t_targetColor)
+template<class T>
+FadeoutAnimation<T>::FadeoutAnimation(float t_duration, T* t_pointer, T t_initialValue,
+                    T t_targetValue, float t_delayDuration) :
+                    Animation<T>(t_duration, t_pointer, t_initialValue, t_targetValue)
 {
     m_timer = new Timer(t_delayDuration);
 }
 
-FadeoutColorAnimation::~FadeoutColorAnimation()
+template<class T>
+FadeoutAnimation<T>::~FadeoutAnimation()
 {
     delete m_timer;
 }
 
-void FadeoutColorAnimation::update()
+template<class T>
+void FadeoutAnimation<T>::update()
 {
-    if (m_maxTime != 0) {
-        if (m_time == m_maxTime) {
+    if (this->m_maxTime != 0) {
+        if (this->m_time == this->m_maxTime) {
             m_timer->start();
             if (m_timer->is_finished()) {
-                stop();
+                this->stop();
             }
         } else {
-            m_time++;
+            this->m_time++;
         }
     } else {
-        if (m_time > 0) {
-            m_time--;
+        if (this->m_time > 0) {
+            this->m_time--;
         }
     }
     
     m_timer->update();
 }
 
-void FadeoutColorAnimation::start()
+template<class T>
+void FadeoutAnimation<T>::start()
 {
-    m_maxTime = m_duration * TPS;
-    m_timer->reset();
+    this->m_maxTime = this->m_duration * TPS;
+    this->m_timer->reset();
     
 }
 
-bool FadeoutColorAnimation::is_finished()
+template<class T>
+bool FadeoutAnimation<T>::is_finished()
 {
-    return (m_timer->is_finished() && m_time == 0);
+    return (this->m_timer->is_finished() &&this-> m_time == 0);
 }
+
+template class Animation<Color>;
