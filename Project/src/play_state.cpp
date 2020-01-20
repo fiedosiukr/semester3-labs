@@ -199,9 +199,9 @@ void PlayState::calculate_coordinates(bool t_animate)
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
-            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
             m_tiles[i][j]->set_location((int)(tileWidth + (tileWidth + boardOffsetX) * i),
                                     (int)(tileHeight + (tileHeight + boardOffsetY) * j), t_animate);
+            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
         }
     }
 }

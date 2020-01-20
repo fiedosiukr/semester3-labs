@@ -22,8 +22,6 @@ class Label
         int m_y;
         int m_width;
         int m_height;
-
-        Animation *m_animation;
 };
 
 #endif

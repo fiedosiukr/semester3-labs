@@ -9,14 +9,14 @@ Button::Button(const char *t_text, ALLEGRO_FONT *t_font,
             m_width(t_width), m_height(t_height)
 {
     m_text = const_cast<char*>(t_text);
-
-    m_colorAnimation = new ColorAnimation(HOVER_DURATION, BUTTON_COLOR, BUTTON_HOVER_COLOR);
+    m_color = BUTTON_COLOR;
+    m_colorAnimation = new Animation<Color>(HOVER_DURATION, &m_color, BUTTON_COLOR, BUTTON_HOVER_COLOR);
 }
 
 void Button::render()
 {
-    al_draw_filled_rectangle(m_x, m_y, m_x + m_width, m_y + m_height, m_color);
-    al_draw_text(m_font, TEXT_COLOR, m_x + m_width / 2, m_y + (m_height - al_get_font_ascent(m_font)) / 2, ALLEGRO_ALIGN_CENTRE, m_text);
+    al_draw_filled_rectangle(m_x, m_y, m_x + m_width, m_y + m_height, m_color.to_al_color());
+    al_draw_text(m_font, TEXT_COLOR.to_al_color(), m_x + m_width / 2, m_y + (m_height - al_get_font_ascent(m_font)) / 2, ALLEGRO_ALIGN_CENTRE, m_text);
 }
 
 void Button::update(int t_mouseX, int t_mouseY)
@@ -34,8 +34,6 @@ void Button::update(int t_mouseX, int t_mouseY)
     }
 
     m_colorAnimation->update();
-
-    m_color = m_colorAnimation->get_color();
 }  
               
 bool Button::is_hovered()
@@ -49,8 +47,8 @@ void Button::set_disabled(bool t_disabled)
 
     if (m_disabled) {
         m_hovered = false;
-        m_colorAnimation->set_initial_color(BUTTON_DISABLED_COLOR);
+        m_colorAnimation->set_initial_value(BUTTON_DISABLED_COLOR);
     } else {
-        m_colorAnimation->set_initial_color(BUTTON_COLOR);
+        m_colorAnimation->set_initial_value(BUTTON_COLOR);
     }
 }

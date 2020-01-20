@@ -32,10 +32,9 @@ class Button
         bool m_hovered{false};
         bool m_disabled{false};
 
-        ColorAnimation *m_colorAnimation;
+        Animation<Color> *m_colorAnimation;
 
-        ALLEGRO_COLOR m_color{al_map_rgb(BUTTON_COLOR.r,
-                                    BUTTON_COLOR.g, BUTTON_COLOR.b)};
+        Color m_color{BUTTON_COLOR};
         ALLEGRO_FONT *m_font{nullptr};
 };
 
