@@ -2,6 +2,7 @@
 #define CONSTANTS_H
 
 #include <allegro5/allegro.h>
+#include <iostream>
 
 
 #define WIDTH 800
@@ -47,13 +48,19 @@ struct Color
     unsigned int g;
     unsigned int b;
 
-    Color(int r, int g, int b) {
+    Color()
+    {
+        r = g = b = 0;
+    }
+
+    Color(int r, int g, int b)
+    {
         this->r = r;
         this->g = g;
         this->b = b;
     }
 
-    struct Color operator=(struct Color& rhs)
+    struct Color& operator=(const struct Color& rhs)
     {
         r = rhs.r;
         g = rhs.g;
@@ -66,11 +73,22 @@ struct Color
     {
         return Color((int) r - rhs.r, (int) g - rhs.g, (int) b - rhs.b);
     }
+    
+    struct Color operator+(const struct Color& rhs)
+    {
+        return Color(r + rhs.r, g + rhs.g, b + rhs.b);
+    }
 
     struct Color operator*(float rhs)
     {
         return Color((int) r * rhs, (int) g * rhs, (int) b * rhs);
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const Color& rhs)
+    {
+        os << "(" << rhs.r << ", " << rhs.g << ", " << rhs.b << ")";
+    }
+
 
     ALLEGRO_COLOR to_al_color()
     {
@@ -84,6 +102,17 @@ struct Point
     int x;
     int y;
 
+    Point()
+    {
+        x = y = 0;
+    }
+
+    Point(int x, int y)
+    {
+        this->x = x;
+        this->y = y;
+    }
+
     bool operator==(const struct Point& rhs)
     {
         return (x == rhs.x && y == rhs.y);
@@ -94,16 +123,31 @@ struct Point
         return (x != rhs.x || y != rhs.y);
     }
 
-    void operator-(const struct Point& rhs)
+    struct Point& operator=(const struct Point& rhs)
     {
-        x = x - rhs.x;
-        y = y - rhs.y;
+        x = rhs.x;
+        y = rhs.y;
+        return *this;
     }
 
-    void operator*(float rhs)
+    struct Point operator-(const struct Point& rhs)
     {
-        x = (int) (x * rhs);
-        y = (int) (y * rhs);
+        return Point(x - rhs.x, y - rhs.y);
+    }
+
+    struct Point operator+(const struct Point& rhs)\
+    {
+        return Point(x + rhs.x, y + rhs.y);
+    }
+
+    struct Point operator*(float rhs)
+    {
+        return Point((int) (x * rhs), (int) (y * rhs));
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Point& rhs)
+    {
+        os << "(" << rhs.x << ", " << rhs.y << ")";
     }
 
 };

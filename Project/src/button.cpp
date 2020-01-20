@@ -9,7 +9,7 @@ Button::Button(const char *t_text, ALLEGRO_FONT *t_font,
             m_width(t_width), m_height(t_height)
 {
     m_text = const_cast<char*>(t_text);
-
+    m_color = BUTTON_COLOR;
     m_colorAnimation = new Animation<Color>(HOVER_DURATION, &m_color, BUTTON_COLOR, BUTTON_HOVER_COLOR);
 }
 

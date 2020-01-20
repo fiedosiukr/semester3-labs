@@ -2,7 +2,6 @@
 #define TILE_H
 
 #include "animation.h"
-
 #include "constants.h"
 
 #include <allegro5/allegro.h>
@@ -22,15 +21,10 @@ class Tile
         bool is_changing_size();
 
     private:
-        int m_x{0};
-        int m_y{0};
-        int m_width{0};
-        int m_height{0};
-        int m_targetX{0};
-        int m_targetY{0};
-        int m_targetWidth{0};
-        int m_targetHeight{0};
-        Point m_currentSize;
+        Point m_coordinates;
+        Point m_size;
+        Point m_targetCoordinates;
+        Point m_targetSize;
         bool m_hovered;
         
         Color m_color;
