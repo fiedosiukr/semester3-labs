@@ -3,10 +3,9 @@
 
 #include "states.h"
 #include "button.h"
+#include "constants.h"
 
 #include <allegro5/allegro.h>
-
-#include "../include/constants.h"
 
 
 class MenuState : public State 

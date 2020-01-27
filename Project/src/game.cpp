@@ -1,5 +1,4 @@
 #include "../include/game.h"
-
 #include "../include/play_state.h"
 #include "../include/constants.h"
 

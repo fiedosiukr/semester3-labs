@@ -1,5 +1,4 @@
 #include "../include/menu_state.h"
-
 #include "../include/button.h"
 #include "../include/constants.h"
 

@@ -32,7 +32,7 @@ PlayState::PlayState(StateManager *t_stateManager) : State(t_stateManager)
 
     char *text = new char[64];
     sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
+    m_scoreLabel = new Label(Point(615, 60), Point(160, 50), text, m_font);
 
     srand(time(0));
 }
@@ -110,6 +110,10 @@ void PlayState::update()
         m_blinkedTiles.clear();
         m_delayTimer->reset();
     }
+
+    if (m_restartGame && !m_tiles[0][0]->is_changing_size()) {
+        restart_game();
+    }
     
     m_blinkingTimer->update();
     m_delayTimer->update();
@@ -169,7 +173,11 @@ void PlayState::check_events(ALLEGRO_EVENT t_event)
             m_started = false;
             m_startButton->set_disabled(false);
             m_restartButton->set_disabled(true);
-            restart_game();
+            for (int i = 0; i < m_width; i++) {
+                for (int j = 0; j < m_height; j++) {
+                    m_tiles[i][j]->animate();
+                }
+            }
         }
         if (m_startButton->is_hovered()) {
             m_started = true;
@@ -199,9 +207,9 @@ void PlayState::calculate_coordinates(bool t_animate)
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
+            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
             m_tiles[i][j]->set_location((int)(tileWidth + (tileWidth + boardOffsetX) * i),
                                     (int)(tileHeight + (tileHeight + boardOffsetY) * j), t_animate);
-            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
         }
     }
 }
@@ -233,11 +241,7 @@ void PlayState::calculate_score()
 
     score -= score_decrement;
     m_score += score;
-    
-    char *text = new char[64];
-    sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
-
+    m_scoreLabel->change_text("Score: " + std::to_string(score));
     m_scoreTimer->reset();
 }
 
@@ -262,7 +266,6 @@ void PlayState::enlarge_board()
 
 void PlayState::restart_game()
 {
-
     for (int i = INITIAL_WIDTH; i < m_width; i++) {
         for (int j = INITIAL_HEIGHT; j < m_height; j++) {
             delete m_tiles[i][j];
@@ -271,11 +274,11 @@ void PlayState::restart_game()
     }
 
     m_tiles.resize(INITIAL_WIDTH);
-
+ 
     m_width = INITIAL_WIDTH;
     m_height = INITIAL_HEIGHT;
-
     calculate_coordinates(true);
+    
 
     m_blinkedTiles.clear();
     m_userClickedTiles.clear();
@@ -289,9 +292,7 @@ void PlayState::restart_game()
     m_difficulty = 1;
     m_difficultyIncrement = 0;
     m_score = 0;
-    char *text = new char[64];
-    sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
+    m_scoreLabel->change_text("Score: 0");
 }
 
 void PlayState::randomize_tiles()

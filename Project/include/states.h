@@ -1,7 +1,7 @@
 #ifndef STATES_H
 #define STATES_H
 
-#include "../include/game.h"
+#include "game.h"
 
 #include <allegro5/allegro.h>
 

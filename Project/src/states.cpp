@@ -1,5 +1,4 @@
 #include "../include/states.h"
-
 #include "../include/menu_state.h"
 #include "../include/play_state.h"
 

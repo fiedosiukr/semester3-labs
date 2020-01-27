@@ -8,7 +8,8 @@
 #include <iostream>
 
 
-int main() {
+int main()
+{
     
     if (!al_init()) {
       std::cout << "Failed to initialize allegro!\n";

@@ -2,15 +2,14 @@
 #define PLAY_STATE_H
 
 #include "states.h"
-
 #include "tile.h"
 #include "button.h"
 #include "label.h"
 #include "constants.h"
 
-#include <vector>
-
 #include <allegro5/allegro_font.h>
+
+#include <vector>
 
 
 class PlayState : public State 
@@ -51,6 +50,7 @@ class PlayState : public State
         bool m_blinking{false};
         bool m_gameOver{false};
         bool m_increaseDifficulty{false};
+        bool m_restartGame;
 
         int m_difficultyIncrement{0};
         int m_score{0};

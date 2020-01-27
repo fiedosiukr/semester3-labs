@@ -1,5 +1,4 @@
 #include "../include/tile.h"
-
 #include "../include/constants.h"
 
 #include <allegro5/allegro_primitives.h>
@@ -12,6 +11,7 @@ Tile::Tile()
     m_colorAnimation = new FadeoutAnimation<Color>(0.2, &m_color, BUTTON_COLOR, BUTTON_HOVER_COLOR, 0.5);
     m_animation = new Animation<Point>(0.5, &m_size, {0, 0}, {0, 0});
 }
+
 
 Tile::~Tile()
 {
@@ -49,6 +49,11 @@ void Tile::update(int t_mouseX, int t_mouseY)
     
 }
 
+void Tile::animate()
+{
+    m_animation->start();
+}
+
 void Tile::set_location(int t_x, int t_y, bool m_animate)
 {
     if (m_animate) {
@@ -84,5 +89,5 @@ bool Tile::is_blinking()
 
 bool Tile::is_changing_size()
 {
-    return (m_targetSize == m_size);
+    return !(m_targetSize == m_size);
 }

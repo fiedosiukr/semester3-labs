@@ -1,5 +1,4 @@
 #include "../include/timer.h"
-
 #include "../include/constants.h"
 
 

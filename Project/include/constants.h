@@ -7,40 +7,30 @@
 
 #define WIDTH 800
 #define HEIGHT 600
-
 #define TPS 60
-
 #define HOVER_DURATION 0.2
-
 #define MENU_FONT_SIZE 28
 #define PLAY_FONT_SIZE 22
-
 #define BUTTON_WIDTH 250
 #define BUTTON_HEIGHT 60
 #define BUTTON_OFFSET 4
 #define BUTTON_AMOUNT 3
-
 #define INITIAL_WIDTH 3
 #define INITIAL_HEIGHT 3
-
 #define INITIAL_BOARD_OFFSET_X 10
 #define INITIAL_BOARD_OFFSET_Y 10
-
 #define MINIMUM_BOARD_OFFSET_X 4
 #define MINIMUM_BOARD_OFFSET_Y 4
-
 #define BOARD_WIDTH 600
 #define BOARD_HEIGHT 600
-
 #define BLINKING_DELAY 0.5
 #define LEVEL_DELAY 2.0
-
 #define TIME_PER_TILE 0.3
 #define SCORE_PER_TILE 10
 #define MAX_SCORE_DECREMENT 6
 #define SCORE_DECREMENT_TIME 0.05
-
 #define DIFFICULTY_INCREMENT_PER_LEVEL 2
+
 
 struct Color
 {
@@ -113,6 +103,12 @@ struct Point
         this->y = y;
     }
 
+    Point(const Point& rhs)
+    {
+        this->x = rhs.x;
+        this->y = rhs.y;
+    }
+
     bool operator==(const struct Point& rhs)
     {
         return (x == rhs.x && y == rhs.y);
@@ -135,7 +131,7 @@ struct Point
         return Point(x - rhs.x, y - rhs.y);
     }
 
-    struct Point operator+(const struct Point& rhs)\
+    struct Point operator+(const struct Point& rhs)
     {
         return Point(x + rhs.x, y + rhs.y);
     }
