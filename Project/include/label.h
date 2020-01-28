@@ -12,9 +12,11 @@ class Label : public GUIComponent
     public:
         Label(const Point&, const Point&, std::string, ALLEGRO_FONT*);
         ~Label();
+        virtual void render();
+        virtual void update();
+        virtual void check_events(ALLEGRO_EVENT&);
         void change_text(const std::string&);
-        void render();
-        void update();
+        
     
     private:
         std::string m_text;

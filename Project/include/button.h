@@ -1,6 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include "gui_comoponent.h"
 #include "constants.h"
 #include "animation.h"
 
@@ -10,27 +11,20 @@
 #include <vector>
 
 
-class Button
+class Button : public GUIComponent
 {
     public:
-        Button(const char*, ALLEGRO_FONT*, int, int, int, int);
-        void render();
-        void update(int, int);
-        bool is_hovered();
-        void set_disabled(bool);
+        Button(const Point&, const Point&, std::string, ALLEGRO_FONT*);
+        virtual void render();
+        virtual void update();
+        virtual void check_events(ALLEGRO_EVENT&);
+        virtual void set_disabled(bool);
 
-    private:
-        char *m_text;
+    protected:
+        std::string m_text;
 
-        int m_x;
-        int m_y;
-        int m_width;
-        int m_height;
         int m_time{0};
         int m_maxTime{0};
-
-        bool m_hovered{false};
-        bool m_disabled{false};
 
         Animation<Color> *m_colorAnimation;
 

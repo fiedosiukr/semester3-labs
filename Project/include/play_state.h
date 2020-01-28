@@ -21,7 +21,7 @@ class PlayState : public State
         void deinit();
         void render();
         void update();
-        void check_events(ALLEGRO_EVENT);
+        void check_events(ALLEGRO_EVENT&);
 
     private:
         void increase_difficulty();

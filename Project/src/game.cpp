@@ -2,8 +2,6 @@
 #include "../include/play_state.h"
 #include "../include/constants.h"
 
-#include <iostream>
-
 
 Game::Game()
 {
@@ -25,6 +23,7 @@ Game::Game()
 	al_register_event_source(m_eventQueue, al_get_display_event_source(m_display));
 	al_register_event_source(m_eventQueue, al_get_timer_event_source(m_timer));
 	al_register_event_source(m_eventQueue, al_get_mouse_event_source());
+	al_register_event_source(m_eventQueue, al_get_keyboard_event_source());
 
 	m_stateManager = new StateManager(this);
     m_stateManager->set_state(StateType::MENU);
@@ -79,7 +78,7 @@ void Game::render()
     updated = false;
 }
 
-void Game::check_events(ALLEGRO_EVENT t_event) {
+void Game::check_events(ALLEGRO_EVENT &t_event) {
 	if (t_event.type == ALLEGRO_EVENT_TIMER) {
 		update();
 		updated = true;

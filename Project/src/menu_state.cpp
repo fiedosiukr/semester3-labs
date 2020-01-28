@@ -1,6 +1,4 @@
 #include "../include/menu_state.h"
-#include "../include/button.h"
-#include "../include/constants.h"
 
 
 MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
@@ -11,15 +9,18 @@ MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
     m_font = al_load_font("arial.ttf", MENU_FONT_SIZE, 0);
     al_destroy_path(path);
 
-    m_playButton = new Button("Play!", m_font, WIDTH / 2 - BUTTON_WIDTH / 2,
-             HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2,
-            BUTTON_WIDTH, BUTTON_HEIGHT);
-    m_scoresButton = new Button("Scores", m_font, WIDTH / 2 - BUTTON_WIDTH / 2,
+    m_playButton = new Button(Point(WIDTH / 2 - BUTTON_WIDTH / 2,
+            HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2),
+            Point(BUTTON_WIDTH, BUTTON_HEIGHT), "Play!", m_font);
+    m_scoresButton = new Button(Point(WIDTH / 2 - BUTTON_WIDTH / 2,
              HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2
-             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 1, BUTTON_WIDTH, BUTTON_HEIGHT);
-    m_quitButton = new Button("Quit", m_font, WIDTH / 2 - BUTTON_WIDTH / 2,
+             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 1), Point(BUTTON_WIDTH, BUTTON_HEIGHT), "Scores", m_font);
+    m_quitButton = new Button(Point(WIDTH / 2 - BUTTON_WIDTH / 2,
              HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2
-             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 2), Point(BUTTON_WIDTH, BUTTON_HEIGHT), "Quit", m_font);
+    m_textbox = new TextBox(Point(WIDTH / 2 - BUTTON_WIDTH / 2,
+             HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2
+             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 3), Point(BUTTON_WIDTH, BUTTON_HEIGHT), m_font);
 }
 
 MenuState::~MenuState()
@@ -42,26 +43,29 @@ void MenuState::deinit()
 
 void MenuState::update()
 {
-    m_playButton->update(m_mouseX, m_mouseY);
-    m_scoresButton->update(m_mouseX, m_mouseY);
-    m_quitButton->update(m_mouseX, m_mouseY);
+    m_playButton->update();
+    m_scoresButton->update();
+    m_quitButton->update();
+    m_textbox->update();
 }
 
 void MenuState::render()
 {
-    al_clear_to_color(al_map_rgb(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b));
+    al_clear_to_color(BACKGROUND_COLOR.to_al_color());
     m_playButton->render();
     m_scoresButton->render();
     m_quitButton->render();
+    m_textbox->render();
 }
 
-void MenuState::check_events(ALLEGRO_EVENT t_event)
+void MenuState::check_events(ALLEGRO_EVENT& t_event)
 {
-    if (t_event.type == ALLEGRO_EVENT_MOUSE_AXES) {
-        m_mouseX = t_event.mouse.x;
-        m_mouseY = t_event.mouse.y;
-    } 
-    else if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
+    m_playButton->check_events(t_event);
+    m_scoresButton->check_events(t_event);
+    m_quitButton->check_events(t_event);
+    m_textbox->check_events(t_event);
+
+    if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
                 t_event.mouse.button == 1) {
         if (m_playButton->is_hovered()) {
             change_state(StateType::PLAY);

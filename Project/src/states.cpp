@@ -47,7 +47,7 @@ void StateManager::render() {
     }
 }
 
-void StateManager::check_events(ALLEGRO_EVENT t_event) {
+void StateManager::check_events(ALLEGRO_EVENT& t_event) {
     if (m_states[m_activeState]) {
         m_states[m_activeState]->check_events(t_event);
     }

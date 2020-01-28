@@ -23,6 +23,10 @@ int main()
       std::cout << "Failed to install mouse!\n";
     }
 
+    if (!al_install_keyboard()) {
+      std::cout << "Failed to install keyboard!\n";
+    }
+
     if (!al_init_font_addon()) {
       std::cout << "Failed to initialize font addon!\n";
     }

@@ -4,6 +4,7 @@
 #include "states.h"
 
 #include <allegro5/allegro.h>
+#include <iostream>
 
 
 class StateManager;
@@ -31,7 +32,7 @@ class Game
         void run();
         void update();
         void render();
-        void check_events(ALLEGRO_EVENT);
+        void check_events(ALLEGRO_EVENT&);
 };
 
 #endif

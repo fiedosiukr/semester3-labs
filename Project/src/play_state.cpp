@@ -25,10 +25,10 @@ PlayState::PlayState(StateManager *t_stateManager) : State(t_stateManager)
 
     m_font = al_load_font("arial.ttf", PLAY_FONT_SIZE, 0);
 
-    m_startButton = new Button("Start", m_font, 620, 415, 160, 50);
-    m_restartButton = new Button("Restart", m_font, 620, 470, 160, 50);
+    m_startButton = new Button(Point(620, 415), Point(160, 50), "Start", m_font);
+    m_restartButton = new Button(Point(620, 470), Point(160, 50), "Restart", m_font);
     m_restartButton->set_disabled(true);
-    m_quitButton = new Button("Quit", m_font, 620, 525, 160, 50);
+    m_quitButton = new Button(Point(620, 525), Point(160, 50), "Quit", m_font);
 
     char *text = new char[64];
     sprintf(text, "Score: %d", m_score);
@@ -110,10 +110,6 @@ void PlayState::update()
         m_blinkedTiles.clear();
         m_delayTimer->reset();
     }
-
-    if (m_restartGame && !m_tiles[0][0]->is_changing_size()) {
-        restart_game();
-    }
     
     m_blinkingTimer->update();
     m_delayTimer->update();
@@ -121,13 +117,13 @@ void PlayState::update()
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
-            m_tiles[i][j]->update(m_mouseX, m_mouseY);
+            m_tiles[i][j]->update();
         }
     }
 
-    m_startButton->update(m_mouseX, m_mouseY);
-    m_restartButton->update(m_mouseX, m_mouseY);
-    m_quitButton->update(m_mouseX, m_mouseY);
+    m_startButton->update();
+    m_restartButton->update();
+    m_quitButton->update();
 
     m_scoreLabel->update();
 }
@@ -149,13 +145,19 @@ void PlayState::render()
     m_scoreLabel->render();
 }
 
-void PlayState::check_events(ALLEGRO_EVENT t_event)
+void PlayState::check_events(ALLEGRO_EVENT& t_event)
 {
-    if (t_event.type == ALLEGRO_EVENT_MOUSE_AXES) {
-        m_mouseX = t_event.mouse.x;
-        m_mouseY = t_event.mouse.y;
-    } 
-    else if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
+    m_startButton->check_events(t_event);
+    m_restartButton->check_events(t_event);
+    m_quitButton->check_events(t_event);
+
+    for (int i = 0; i < m_width; i++) {
+        for (int j = 0; j < m_height; j++) {
+            m_tiles[i][j]->check_events(t_event);
+        }
+    }
+
+    if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
                 t_event.mouse.button == 1) {
         if (!m_blinking && !m_gameOver && m_userClickedTiles.size() < m_tilesToRemember && m_started) {
             for (int i = 0; i < m_width; i++) {
@@ -173,11 +175,7 @@ void PlayState::check_events(ALLEGRO_EVENT t_event)
             m_started = false;
             m_startButton->set_disabled(false);
             m_restartButton->set_disabled(true);
-            for (int i = 0; i < m_width; i++) {
-                for (int j = 0; j < m_height; j++) {
-                    m_tiles[i][j]->animate();
-                }
-            }
+            restart_game();
         }
         if (m_startButton->is_hovered()) {
             m_started = true;
@@ -241,7 +239,7 @@ void PlayState::calculate_score()
 
     score -= score_decrement;
     m_score += score;
-    m_scoreLabel->change_text("Score: " + std::to_string(score));
+    m_scoreLabel->change_text("Score: " + std::to_string(m_score));
     m_scoreTimer->reset();
 }
 

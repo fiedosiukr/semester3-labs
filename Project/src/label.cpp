@@ -26,3 +26,8 @@ void Label::render()
 void Label::update()
 {
 }
+
+void Label::check_events(ALLEGRO_EVENT& t_event)
+{
+
+}

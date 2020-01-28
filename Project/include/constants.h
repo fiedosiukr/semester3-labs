@@ -30,6 +30,9 @@
 #define MAX_SCORE_DECREMENT 6
 #define SCORE_DECREMENT_TIME 0.05
 #define DIFFICULTY_INCREMENT_PER_LEVEL 2
+#define MAX_TEXT_LENGTH 12
+#define TEXTBOX_OFFSET 23
+#define FOCUS_LINE_WIDTH 2
 
 
 struct Color
@@ -119,24 +122,39 @@ struct Point
         return (x != rhs.x || y != rhs.y);
     }
 
-    struct Point& operator=(const struct Point& rhs)
+    bool operator>=(const struct Point& rhs)
+    {
+        return (x >= rhs.x && y >= rhs.y);
+    }
+
+    bool operator<(const struct Point& rhs)
+    {
+        return (x < rhs.x && y < rhs.y);
+    }
+
+    Point& operator=(const struct Point& rhs)
     {
         x = rhs.x;
         y = rhs.y;
         return *this;
     }
 
-    struct Point operator-(const struct Point& rhs)
+    Point operator-(const struct Point& rhs)
     {
         return Point(x - rhs.x, y - rhs.y);
     }
 
-    struct Point operator+(const struct Point& rhs)
+    Point operator/(int rhs)
+    {
+        return Point((int) x / 2, (int) y / 2);       
+    }
+
+    Point operator+(const struct Point& rhs)
     {
         return Point(x + rhs.x, y + rhs.y);
     }
 
-    struct Point operator*(float rhs)
+    Point operator*(float rhs)
     {
         return Point((int) (x * rhs), (int) (y * rhs));
     }
@@ -155,5 +173,8 @@ static Color TEXT_COLOR = {230, 230, 230};
 static Color CORRECT_COLOR = {34, 151, 34};
 static Color WRONG_COLOR = {200, 0, 30};
 static Color BACKGROUND_COLOR {25, 25, 25};
+static Color TEXTBOX_COLOR = {100, 100, 100};
+static Color TEXTBOX_FOCUS_COLOR = {150, 150, 150};
+static Color FOCUS_LINE_COLOR = {0, 0, 0};
 
 #endif
