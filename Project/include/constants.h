@@ -163,7 +163,20 @@ struct Point
     {
         os << "(" << rhs.x << ", " << rhs.y << ")";
     }
+};
 
+struct Score
+{
+    std::string username;
+    int score;
+
+    Score(std::string username, int score)
+    {
+        this->username = username;
+        this->score = score;
+    }
+
+    
 };
 
 static Color BUTTON_COLOR = {140, 45, 0};

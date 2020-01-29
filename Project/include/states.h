@@ -11,7 +11,8 @@
 enum StateType
 {
     MENU = 0,
-    PLAY
+    PLAY,
+    SCORES
 };
 
 

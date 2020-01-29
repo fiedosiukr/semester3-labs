@@ -130,7 +130,7 @@ void PlayState::update()
 
 void PlayState::render()
 {
-    al_clear_to_color(al_map_rgb(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b));
+    al_clear_to_color(BACKGROUND_COLOR.to_al_color());
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {

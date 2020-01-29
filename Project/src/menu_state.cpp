@@ -70,8 +70,11 @@ void MenuState::check_events(ALLEGRO_EVENT& t_event)
         if (m_playButton->is_hovered()) {
             change_state(StateType::PLAY);
         }
-        if (m_quitButton->is_hovered()) {
+        else if (m_quitButton->is_hovered()) {
             quit_game();
+        }
+        else if (m_scoresButton->is_hovered()) {
+            change_state(StateType::SCORES);
         }
     }
 }
