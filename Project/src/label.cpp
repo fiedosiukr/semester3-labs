@@ -2,8 +2,8 @@
 #include "../include/constants.h"
 
 
-Label::Label(const Point& t_coordinates, const Point& t_size, std::string t_text, ALLEGRO_FONT *t_font) :
-            GUIComponent(t_coordinates, t_size), m_text(t_text), m_font(t_font)
+Label::Label(const Point& t_coordinates, std::string t_text, ALLEGRO_FONT *t_font) :
+            GUIComponent(t_coordinates, Point(0, 0)), m_text(t_text), m_font(t_font)
 {
 }
 

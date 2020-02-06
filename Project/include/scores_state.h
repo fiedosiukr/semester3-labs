@@ -4,6 +4,7 @@
 #include "states.h"
 #include "constants.h"
 #include "button.h"
+#include "label.h"
 
 #include <vector>
 
@@ -20,11 +21,14 @@ class ScoresState : public State
         void check_events(ALLEGRO_EVENT&);
     
     private:
+        void load_scores();
+
         std::vector<Score> m_scores;
 
         ALLEGRO_FONT *m_font;
         
         Button *m_backButton;
+        Label *m_labels[MAX_SCORES];
 };
 
 #endif

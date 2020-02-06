@@ -33,7 +33,10 @@
 #define MAX_TEXT_LENGTH 12
 #define TEXTBOX_OFFSET 23
 #define FOCUS_LINE_WIDTH 2
+#define FILENAME "../scores.txt"
+#define MAX_SCORES 5
 
+extern std::string USERNAME;
 
 struct Color
 {
@@ -170,13 +173,20 @@ struct Score
     std::string username;
     int score;
 
+    Score() {}
+
     Score(std::string username, int score)
     {
         this->username = username;
         this->score = score;
     }
 
-    
+    friend std::string& operator>>(std::string& line, Score& rhs)
+    {
+        rhs.username = line.substr(0, line.find(','));
+        rhs.score = std::atoi(line.substr(line.find(',') + 1, line.size() - 1).c_str());
+        return line;
+    }
 };
 
 static Color BUTTON_COLOR = {140, 45, 0};
@@ -186,8 +196,8 @@ static Color TEXT_COLOR = {230, 230, 230};
 static Color CORRECT_COLOR = {34, 151, 34};
 static Color WRONG_COLOR = {200, 0, 30};
 static Color BACKGROUND_COLOR {25, 25, 25};
-static Color TEXTBOX_COLOR = {100, 100, 100};
-static Color TEXTBOX_FOCUS_COLOR = {150, 150, 150};
+static Color TEXTBOX_COLOR = {66, 66, 66};
+static Color TEXTBOX_FOCUS_COLOR = {89, 89, 89};
 static Color FOCUS_LINE_COLOR = {0, 0, 0};
 
 #endif

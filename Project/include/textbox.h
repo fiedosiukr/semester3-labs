@@ -15,6 +15,8 @@ class TextBox : public GUIComponent
         virtual void update();
         virtual void render();
         virtual void check_events(ALLEGRO_EVENT&);
+        std::string& get_text();
+        void set_text(std::string&);
     
     protected:
         std::string m_text;

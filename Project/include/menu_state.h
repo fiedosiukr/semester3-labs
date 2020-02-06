@@ -5,6 +5,7 @@
 #include "button.h"
 #include "textbox.h"
 #include "constants.h"
+#include "label.h"
 
 #include <allegro5/allegro.h>
 
@@ -30,6 +31,7 @@ class MenuState : public State
         Button *m_playButton;
         Button *m_scoresButton;
         Button *m_quitButton;
+        Label *m_label;
         TextBox *m_textbox;
 };
 

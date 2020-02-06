@@ -1,6 +1,9 @@
 #include "../include/menu_state.h"
 
 
+std::string USERNAME = "noname";
+
+
 MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
 {
     ALLEGRO_PATH *path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
@@ -20,7 +23,12 @@ MenuState::MenuState(StateManager *t_stateManager) : State(t_stateManager)
              + (BUTTON_OFFSET + BUTTON_HEIGHT) * 2), Point(BUTTON_WIDTH, BUTTON_HEIGHT), "Quit", m_font);
     m_textbox = new TextBox(Point(WIDTH / 2 - BUTTON_WIDTH / 2,
              HEIGHT / 2 - (BUTTON_HEIGHT + (BUTTON_AMOUNT - 1) * BUTTON_OFFSET) * 3 / 2
-             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 3), Point(BUTTON_WIDTH, BUTTON_HEIGHT), m_font);
+             + (BUTTON_OFFSET + BUTTON_HEIGHT) * 3 + 125), Point(BUTTON_WIDTH, BUTTON_HEIGHT), m_font);
+
+    m_label = new Label(Point(WIDTH / 2, HEIGHT / 2 + 185), "Enter username:", m_font);
+
+    m_textbox->set_text(USERNAME);
+
 }
 
 MenuState::~MenuState()
@@ -28,6 +36,8 @@ MenuState::~MenuState()
     delete m_playButton;
     delete m_scoresButton;
     delete m_quitButton;
+    delete m_textbox;
+    delete m_label;
     al_destroy_font(m_font);
 }
 
@@ -43,6 +53,8 @@ void MenuState::deinit()
 
 void MenuState::update()
 {
+    USERNAME = m_textbox->get_text();
+
     m_playButton->update();
     m_scoresButton->update();
     m_quitButton->update();
@@ -56,6 +68,7 @@ void MenuState::render()
     m_scoresButton->render();
     m_quitButton->render();
     m_textbox->render();
+    m_label->render();
 }
 
 void MenuState::check_events(ALLEGRO_EVENT& t_event)
@@ -65,7 +78,7 @@ void MenuState::check_events(ALLEGRO_EVENT& t_event)
     m_quitButton->check_events(t_event);
     m_textbox->check_events(t_event);
 
-    if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
+    if (t_event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP &&
                 t_event.mouse.button == 1) {
         if (m_playButton->is_hovered()) {
             change_state(StateType::PLAY);

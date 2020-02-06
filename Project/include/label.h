@@ -10,7 +10,7 @@
 class Label : public GUIComponent
 {
     public:
-        Label(const Point&, const Point&, std::string, ALLEGRO_FONT*);
+        Label(const Point&, std::string, ALLEGRO_FONT*);
         ~Label();
         virtual void render();
         virtual void update();

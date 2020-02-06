@@ -6,11 +6,11 @@
 #include <allegro5/allegro_font.h>
 
 #include <iostream>
+#include <fstream>
 
 
 int main()
 {
-    
     if (!al_init()) {
       std::cout << "Failed to initialize allegro!\n";
     }

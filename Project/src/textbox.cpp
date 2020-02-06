@@ -43,7 +43,7 @@ void TextBox::check_events(ALLEGRO_EVENT &t_event)
                 if (m_text.size() > 0)
 		    	m_text.pop_back();
 		    } else if (((t_event.keyboard.keycode >= ALLEGRO_KEY_A && t_event.keyboard.keycode <= ALLEGRO_KEY_9) ||
-                        t_event.keyboard.keycode == ALLEGRO_KEY_SPACE) && m_text.size() < MAX_TEXT_LENGTH) {
+                        t_event.keyboard.keycode == ALLEGRO_KEY_SPACE) && m_text.size() <= MAX_TEXT_LENGTH) {
             	m_text += (char) t_event.keyboard.unichar;
 		    }
         }
@@ -55,4 +55,14 @@ void TextBox::check_events(ALLEGRO_EVENT &t_event)
     } else if (t_event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && t_event.mouse.button == 1) {
         m_focused = m_hovered;
     }
+}
+
+std::string& TextBox::get_text()
+{
+    return m_text;
+}
+
+void TextBox::set_text(std::string& text)
+{
+    m_text = text;
 }

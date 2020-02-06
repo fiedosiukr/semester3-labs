@@ -26,11 +26,12 @@ class PlayState : public State
     private:
         void increase_difficulty();
         void calculate_score();
-        void restart_game();
+        void restart_game(bool);
         void calculate_coordinates(bool);
         void enlarge_board();
         void randomize_tiles();
         void clicked(Point);
+        void save_score();
         std::vector<std::vector<Tile*>> m_tiles;
 
         std::vector<Point> m_blinkedTiles;
@@ -51,6 +52,7 @@ class PlayState : public State
         bool m_gameOver{false};
         bool m_increaseDifficulty{false};
         bool m_restartGame;
+        bool m_saveScore{false};
 
         int m_difficultyIncrement{0};
         int m_score{0};
@@ -61,6 +63,7 @@ class PlayState : public State
 
         Button *m_startButton;
         Button *m_restartButton;
+        Button *m_returnButton;
         Button *m_quitButton;
 
         Label *m_scoreLabel;
