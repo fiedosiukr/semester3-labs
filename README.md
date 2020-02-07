@@ -7,7 +7,7 @@ The necessary part of internal specification was to cover four different types o
 * **templates** - They can be find in the animation system. Templates were necessary to add in order to animate different values. At the beginning there were different classes for different types of variables, but I figured out that it isn't right to rewrite same code twice. There are two template classes *Animation* and *FadeoutAnimation*.
 * **I/O streams** - In order to keep our best scores in a file I had to use some kind of libraries that allow to save data into file. I decided to use *fstream* library, because it's simple to use.
 
-<p align="center"><img src="/inages/structure.png" alt="Game structure"></p>
+<p align="center"><img src="/images/structure.png" alt="Game structure"></p>
 
 
 ## External specification
@@ -18,9 +18,9 @@ The program was written to work on UNIX based systems, but it can be run on Wind
 ## Tests
 I have played the game a lot of times but only once I achieved score greater than 700. It's really challenging to end the game with high score. Below I would like to include a few screenshots representing the look of the game.
 
-<p align="center"><img src="/images/test1" alt="Game"></p>
-<p align="center"><img src="/images/test2" alt="Highest scores"></p>
-<p align="center"><img src="/images/test3" alt="Main menu"></p>
+<p align="center"><img src="/images/test1.png" alt="Game"></p>
+<p align="center"><img src="/images/test2.png" alt="Highest scores"></p>
+<p align="center"><img src="/images/test3.png" alt="Main menu"></p>
 
 
 ## Conclusions
