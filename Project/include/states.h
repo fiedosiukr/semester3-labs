@@ -1,7 +1,7 @@
 #ifndef STATES_H
 #define STATES_H
 
-#include "../include/game.h"
+#include "game.h"
 
 #include <allegro5/allegro.h>
 
@@ -11,7 +11,8 @@
 enum StateType
 {
     MENU = 0,
-    PLAY
+    PLAY,
+    SCORES
 };
 
 
@@ -28,7 +29,7 @@ class StateManager
         void set_state(StateType);
         void update();
         void render();
-        void check_events(ALLEGRO_EVENT);
+        void check_events(ALLEGRO_EVENT&);
         State &get_active_state();
         Game &get_game();
 
@@ -46,7 +47,7 @@ class State
         virtual void deinit() = 0;
         virtual void update() = 0;
         virtual void render() = 0;
-        virtual void check_events(ALLEGRO_EVENT) = 0;
+        virtual void check_events(ALLEGRO_EVENT&) = 0;
     
     protected:
         State(StateManager *t_stateManager) : m_stateManager(t_stateManager) {}

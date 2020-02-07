@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <fstream>
 
 
 PlayState::PlayState(StateManager *t_stateManager) : State(t_stateManager)
@@ -25,14 +26,15 @@ PlayState::PlayState(StateManager *t_stateManager) : State(t_stateManager)
 
     m_font = al_load_font("arial.ttf", PLAY_FONT_SIZE, 0);
 
-    m_startButton = new Button("Start", m_font, 620, 415, 160, 50);
-    m_restartButton = new Button("Restart", m_font, 620, 470, 160, 50);
+    m_startButton = new Button(Point(620, 360), Point(160, 50), "Start", m_font);
+    m_restartButton = new Button(Point(620, 415), Point(160, 50), "Restart", m_font);
     m_restartButton->set_disabled(true);
-    m_quitButton = new Button("Quit", m_font, 620, 525, 160, 50);
+    m_returnButton = new Button(Point(620, 470), Point(160, 50), "Return", m_font);
+    m_quitButton = new Button(Point(620, 525), Point(160, 50), "Quit", m_font);
 
     char *text = new char[64];
     sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
+    m_scoreLabel = new Label(Point(700, 60), text, m_font);
 
     srand(time(0));
 }
@@ -51,6 +53,7 @@ PlayState::~PlayState()
 
     delete m_startButton;
     delete m_restartButton;
+    delete m_returnButton;
     delete m_quitButton;
     
     delete m_scoreLabel;
@@ -65,45 +68,44 @@ void PlayState::init()
 
 void PlayState::deinit()
 {
-
+    m_started = false;
+    m_restartButton->set_disabled(true);
+    m_startButton->set_disabled(false);
 }
 
 void PlayState::update()
 {
     if (!m_gameOver) {
-    if (m_blinking) {
-        if (m_blinkingIndex < m_tilesToRemember) {
-            if (m_blinkingTimer->is_finished()) {
-                m_tiles[m_blinkedTiles[m_blinkingIndex].x][m_blinkedTiles[m_blinkingIndex].y]->blink(BUTTON_HOVER_COLOR);
-                m_blinkingTimer->reset_time();
-                m_blinkingIndex++;
+        if (m_blinking) {
+            if (m_blinkingIndex < m_tilesToRemember) {
+                if (m_blinkingTimer->is_finished()) {
+                    m_tiles[m_blinkedTiles[m_blinkingIndex].x][m_blinkedTiles[m_blinkingIndex].y]->blink(BUTTON_HOVER_COLOR);
+                    m_blinkingTimer->reset_time();
+                    m_blinkingIndex++;
+                }
+            }
+            else {
+                if (!(m_tiles[m_blinkedTiles[m_tilesToRemember - 1].x][m_blinkedTiles[m_tilesToRemember - 1].y]->is_blinking())) {
+                    m_blinking = false;
+                    m_userClickedTiles.clear();
+                    m_scoreTimer->start();
+                }
             }
         }
-        else {
-            if (!(m_tiles[m_blinkedTiles[m_tilesToRemember - 1].x][m_blinkedTiles[m_tilesToRemember - 1].y]->is_blinking())) {
-                m_blinking = false;
-                m_userClickedTiles.clear();
-                m_scoreTimer->start();
+
+        if (m_blinkedTiles.empty()) {
+            if (m_started) {
+                m_tilesToRemember = m_difficulty;
+                randomize_tiles();
+            }
+        } 
+
+        if (!m_blinkedTiles.empty() && !m_tiles[m_blinkedTiles.back().x][m_blinkedTiles.back().y]->is_blinking()) {
+            if (m_increaseDifficulty) {
+                increase_difficulty();
+                m_increaseDifficulty = false;
             }
         }
-    }
-
-    if (m_blinkedTiles.empty()) {
-        if (m_started) {
-            m_tilesToRemember = m_difficulty;
-            randomize_tiles();
-        }
-    } 
-
-    if (!m_blinkedTiles.empty() && !m_tiles[m_blinkedTiles.back().x][m_blinkedTiles.back().y]->is_blinking()) {
-        if (m_increaseDifficulty) {
-            increase_difficulty();
-            m_increaseDifficulty = false;
-        }
-        if (m_gameOver) {
-            restart_game();
-        }
-    }
     }
 
     if (m_delayTimer->is_finished()) {
@@ -117,20 +119,67 @@ void PlayState::update()
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
-            m_tiles[i][j]->update(m_mouseX, m_mouseY);
+            m_tiles[i][j]->update();
         }
     }
 
-    m_startButton->update(m_mouseX, m_mouseY);
-    m_restartButton->update(m_mouseX, m_mouseY);
-    m_quitButton->update(m_mouseX, m_mouseY);
+    m_startButton->update();
+    m_restartButton->update();
+    m_returnButton->update();
+    m_quitButton->update();
 
     m_scoreLabel->update();
 }
 
+void PlayState::save_score()
+{
+    if (m_score == 0) {
+        return;
+    }
+
+    std::ifstream input_file("../scores.txt", std::ios::in);
+    std::vector<Score> file_scores;
+
+    if (input_file.is_open()) {
+        std::string line;
+        int scores = 0;
+        while (std::getline(input_file, line) && scores < MAX_SCORES) {
+        Score score;
+        line >> score;
+        file_scores.emplace_back(score);
+        scores++;
+        }
+    }
+    
+    if (file_scores.size() == 0) {
+        file_scores.emplace_back(Score(USERNAME, m_score));
+    }
+    else {
+        bool placed = false;
+        for (auto it = file_scores.begin(); it != file_scores.end(); it++) {
+            if (m_score > it->score) {
+                file_scores.emplace(it, Score(USERNAME, m_score));
+                placed = true;
+                break;
+            }
+        }
+
+        if (!placed && file_scores.size() < MAX_SCORES) {
+            file_scores.emplace_back(Score(USERNAME, m_score));
+        }
+    }
+
+
+    input_file.close();
+    std::ofstream output_file("../scores.txt", std::ios::trunc);
+    for (int i = 0; i < MAX_SCORES && i < file_scores.size(); i++) {
+        output_file << file_scores[i].username << "," << std::to_string(file_scores[i].score) << std::endl;
+    }
+}
+
 void PlayState::render()
 {
-    al_clear_to_color(al_map_rgb(BACKGROUND_COLOR.r, BACKGROUND_COLOR.g, BACKGROUND_COLOR.b));
+    al_clear_to_color(BACKGROUND_COLOR.to_al_color());
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
@@ -140,18 +189,26 @@ void PlayState::render()
 
     m_startButton->render();
     m_restartButton->render();
+    m_returnButton->render();
     m_quitButton->render();
 
     m_scoreLabel->render();
 }
 
-void PlayState::check_events(ALLEGRO_EVENT t_event)
+void PlayState::check_events(ALLEGRO_EVENT& t_event)
 {
-    if (t_event.type == ALLEGRO_EVENT_MOUSE_AXES) {
-        m_mouseX = t_event.mouse.x;
-        m_mouseY = t_event.mouse.y;
-    } 
-    else if (t_event.type = ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
+    m_startButton->check_events(t_event);
+    m_restartButton->check_events(t_event);
+    m_returnButton->check_events(t_event);
+    m_quitButton->check_events(t_event);
+
+    for (int i = 0; i < m_width; i++) {
+        for (int j = 0; j < m_height; j++) {
+            m_tiles[i][j]->check_events(t_event);
+        }
+    }
+
+    if (t_event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN &&
                 t_event.mouse.button == 1) {
         if (!m_blinking && !m_gameOver && m_userClickedTiles.size() < m_tilesToRemember && m_started) {
             for (int i = 0; i < m_width; i++) {
@@ -162,16 +219,29 @@ void PlayState::check_events(ALLEGRO_EVENT t_event)
                 }
             }
         }
+    }
+    else if (t_event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && t_event.mouse.button == 1) {
         if (m_quitButton->is_hovered()) {
             quit_game();
         }
-        if (m_restartButton->is_hovered()) {
+        else if (m_restartButton->is_hovered()) {
+            if (m_saveScore) {
+                save_score();
+            }
+
             m_started = false;
             m_startButton->set_disabled(false);
             m_restartButton->set_disabled(true);
-            restart_game();
+            restart_game(true);
         }
-        if (m_startButton->is_hovered()) {
+        else if (m_returnButton->is_hovered()) {
+            if (m_saveScore) {
+                save_score();
+            }
+            m_stateManager->set_state(StateType::MENU);
+        }
+        else if (m_startButton->is_hovered()) {
+            m_saveScore = true;
             m_started = true;
             m_restartButton->set_disabled(false);
             m_startButton->set_disabled(true);
@@ -199,9 +269,9 @@ void PlayState::calculate_coordinates(bool t_animate)
 
     for (int i = 0; i < m_width; i++) {
         for (int j = 0; j < m_height; j++) {
+            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
             m_tiles[i][j]->set_location((int)(tileWidth + (tileWidth + boardOffsetX) * i),
                                     (int)(tileHeight + (tileHeight + boardOffsetY) * j), t_animate);
-            m_tiles[i][j]->set_size((int) tileWidth, (int) tileHeight, t_animate);
         }
     }
 }
@@ -233,11 +303,7 @@ void PlayState::calculate_score()
 
     score -= score_decrement;
     m_score += score;
-    
-    char *text = new char[64];
-    sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
-
+    m_scoreLabel->change_text("Score: " + std::to_string(m_score));
     m_scoreTimer->reset();
 }
 
@@ -260,9 +326,8 @@ void PlayState::enlarge_board()
     calculate_coordinates(true);
 }
 
-void PlayState::restart_game()
+void PlayState::restart_game(bool t_animate)
 {
-
     for (int i = INITIAL_WIDTH; i < m_width; i++) {
         for (int j = INITIAL_HEIGHT; j < m_height; j++) {
             delete m_tiles[i][j];
@@ -271,11 +336,11 @@ void PlayState::restart_game()
     }
 
     m_tiles.resize(INITIAL_WIDTH);
-
+ 
     m_width = INITIAL_WIDTH;
     m_height = INITIAL_HEIGHT;
-
-    calculate_coordinates(true);
+    calculate_coordinates(t_animate);
+    
 
     m_blinkedTiles.clear();
     m_userClickedTiles.clear();
@@ -289,9 +354,7 @@ void PlayState::restart_game()
     m_difficulty = 1;
     m_difficultyIncrement = 0;
     m_score = 0;
-    char *text = new char[64];
-    sprintf(text, "Score: %d", m_score);
-    m_scoreLabel = new Label(text, m_font, 615, 60, 160, 50);
+    m_scoreLabel->change_text("Score: 0");
 }
 
 void PlayState::randomize_tiles()
@@ -326,6 +389,8 @@ void PlayState::clicked(Point t_point)
         else {
             m_tiles[t_point.x][t_point.y]->blink(WRONG_COLOR);
             m_gameOver = true;
+            save_score();
+            m_saveScore = false;
             return;
         }
 

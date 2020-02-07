@@ -1,5 +1,4 @@
 #include "../include/tile.h"
-
 #include "../include/constants.h"
 
 #include <allegro5/allegro_primitives.h>
@@ -12,6 +11,7 @@ Tile::Tile()
     m_colorAnimation = new FadeoutAnimation<Color>(0.2, &m_color, BUTTON_COLOR, BUTTON_HOVER_COLOR, 0.5);
     m_animation = new Animation<Point>(0.5, &m_size, {0, 0}, {0, 0});
 }
+
 
 Tile::~Tile()
 {
@@ -31,11 +31,8 @@ void Tile::render()
                             m_coordinates.x + m_size.x / 2, m_coordinates.y + m_size.y / 2, m_color.to_al_color());
 }
 
-void Tile::update(int t_mouseX, int t_mouseY)
+void Tile::update()
 {
-    m_hovered = (t_mouseX >= m_coordinates.x - m_size.x / 2 && t_mouseX < m_coordinates.x + m_size.x / 2 &&
-                t_mouseY >= m_coordinates.y - m_size.y / 2 && t_mouseY < m_coordinates.y + m_size.y / 2);
-
     if (m_animation->is_finished()) {
         m_size = m_targetSize;
         m_animation->set_initial_value(m_size);
@@ -46,7 +43,19 @@ void Tile::update(int t_mouseX, int t_mouseY)
     m_colorAnimation->update();
     m_animation->update();
 
-    
+}
+
+void Tile::check_events(ALLEGRO_EVENT& t_event)
+{
+    if (t_event.mouse.type == ALLEGRO_EVENT_MOUSE_AXES) {
+        Point p(t_event.mouse.x, t_event.mouse.y);
+        m_hovered = (p >= m_coordinates - (m_size / 2) && p < m_coordinates + (m_size / 2));
+    }
+}
+
+void Tile::animate()
+{
+    m_animation->start();
 }
 
 void Tile::set_location(int t_x, int t_y, bool m_animate)
@@ -84,5 +93,5 @@ bool Tile::is_blinking()
 
 bool Tile::is_changing_size()
 {
-    return (m_targetSize == m_size);
+    return !(m_targetSize == m_size);
 }

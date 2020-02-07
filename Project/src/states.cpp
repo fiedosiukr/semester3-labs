@@ -1,13 +1,14 @@
 #include "../include/states.h"
-
 #include "../include/menu_state.h"
 #include "../include/play_state.h"
+#include "../include/scores_state.h"
 
 
 StateManager::StateManager(Game *t_game) : m_game(t_game)
 {
     m_states[StateType::MENU] = new MenuState(this);
     m_states[StateType::PLAY] = new PlayState(this);
+    m_states[StateType::SCORES] = new ScoresState(this);
 }
 
 StateManager::~StateManager()
@@ -16,6 +17,7 @@ StateManager::~StateManager()
 
     delete m_states[StateType::MENU];
     delete m_states[StateType::PLAY];
+    delete m_states[StateType::SCORES];
 }
 
 void StateManager::add_state(StateType t_stateType, State *t_state)
@@ -48,7 +50,7 @@ void StateManager::render() {
     }
 }
 
-void StateManager::check_events(ALLEGRO_EVENT t_event) {
+void StateManager::check_events(ALLEGRO_EVENT& t_event) {
     if (m_states[m_activeState]) {
         m_states[m_activeState]->check_events(t_event);
     }

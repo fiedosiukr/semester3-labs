@@ -3,10 +3,11 @@
 
 #include "states.h"
 #include "button.h"
+#include "textbox.h"
+#include "constants.h"
+#include "label.h"
 
 #include <allegro5/allegro.h>
-
-#include "../include/constants.h"
 
 
 class MenuState : public State 
@@ -19,7 +20,7 @@ class MenuState : public State
         void deinit();
         void render();
         void update();
-        void check_events(ALLEGRO_EVENT);
+        void check_events(ALLEGRO_EVENT&);
 
     private:
         ALLEGRO_FONT *m_font;
@@ -30,6 +31,8 @@ class MenuState : public State
         Button *m_playButton;
         Button *m_scoresButton;
         Button *m_quitButton;
+        Label *m_label;
+        TextBox *m_textbox;
 };
 
 #endif

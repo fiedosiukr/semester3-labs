@@ -6,10 +6,11 @@
 #include <allegro5/allegro_font.h>
 
 #include <iostream>
+#include <fstream>
 
 
-int main() {
-    
+int main()
+{
     if (!al_init()) {
       std::cout << "Failed to initialize allegro!\n";
     }
@@ -20,6 +21,10 @@ int main() {
     
     if (!al_install_mouse()) {
       std::cout << "Failed to install mouse!\n";
+    }
+
+    if (!al_install_keyboard()) {
+      std::cout << "Failed to install keyboard!\n";
     }
 
     if (!al_init_font_addon()) {

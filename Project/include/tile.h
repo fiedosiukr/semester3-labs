@@ -6,6 +6,7 @@
 
 #include <allegro5/allegro.h>
 
+
 class Tile
 {
     public:
@@ -13,12 +14,14 @@ class Tile
         ~Tile();
         void blink(Color);
         void render();
-        void update(int, int);
+        void update();
+        void check_events(ALLEGRO_EVENT& t_event);
         void set_location(int, int, bool);
         void set_size(int, int, bool);
         bool is_hovered();
         bool is_blinking();
         bool is_changing_size();
+        void animate();
 
     private:
         Point m_coordinates;
